@@ -90,6 +90,70 @@ p{margin:0 0 1.15em;max-width:62ch}
 .hero__scroll span{display:block;width:1px;height:46px;background:rgba(255,255,255,.55);animation:pulse 2.4s ease-in-out infinite}
 @keyframes pulse{0%,100%{opacity:.25;transform:scaleY(.6)}50%{opacity:1;transform:scaleY(1)}}
 
+
+/* ---------------------------------------------------------------- Hintergründe */
+/* Feines Korn über der ganzen Seite – als Inline-SVG, also ohne zusätzlichen Ladevorgang */
+body::after{
+  content:"";position:fixed;inset:0;z-index:9;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='240' height='240' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;
+}
+/* Abschnitte tragen ein stark abgeschwächtes eigenes Chorfoto statt einer blanken Fläche.
+   Der Verlauf darüber sichert den Textkontrast. */
+.section{position:relative;background-repeat:no-repeat;background-size:cover;background-position:center}
+
+#ueber{
+  background-image:
+    linear-gradient(to bottom, rgba(251,248,242,.97) 0%, rgba(251,248,242,.90) 45%, rgba(251,248,242,.98) 100%),
+    url("img/bg-buehne.jpg");
+}
+#auftritte{
+  background-image:
+    linear-gradient(to bottom, rgba(246,241,231,.985) 0%, rgba(246,241,231,.93) 40%, rgba(246,241,231,.99) 100%),
+    url("img/bg-warm.jpg");
+  background-position:center 20%;
+}
+#videos{
+  background-image:
+    linear-gradient(to bottom, rgba(251,248,242,.99) 0%, rgba(251,248,242,.94) 50%, rgba(251,248,242,.99) 100%),
+    url("img/bg-abend.jpg");
+}
+#repertoire{
+  background-image:
+    linear-gradient(to bottom, rgba(246,241,231,.98) 0%, rgba(246,241,231,.94) 50%, rgba(246,241,231,.99) 100%),
+    url("img/bg-buehne.jpg");
+  background-position:center 70%;
+}
+#jahreskonzert{
+  background-image:
+    radial-gradient(120% 90% at 78% 12%, rgba(228,217,195,.55) 0%, rgba(251,248,242,0) 62%),
+    linear-gradient(to bottom, var(--papier), var(--papier));
+}
+/* Der dunkle Abschnitt verträgt mehr Bild */
+#mitsingen{
+  background-image:
+    linear-gradient(to bottom, rgba(24,26,21,.94) 0%, rgba(24,26,21,.86) 45%, rgba(24,26,21,.95) 100%),
+    url("img/bg-abend.jpg");
+}
+.footer{
+  position:relative;
+  background-image:
+    linear-gradient(to bottom, rgba(228,217,195,.97), rgba(228,217,195,.99)),
+    url("img/bg-warm.jpg");
+  background-size:cover;background-position:center 30%;
+}
+/* Weiche Übergänge zwischen den Abschnitten statt harter Kanten */
+.section--sand::before,.section--dark::before{
+  content:"";position:absolute;left:0;right:0;top:0;height:70px;pointer-events:none;
+  background:linear-gradient(to bottom, rgba(251,248,242,.75), rgba(251,248,242,0));
+}
+.section--dark::before{background:linear-gradient(to bottom, rgba(24,26,21,.55), rgba(24,26,21,0))}
+@media (max-width:680px){
+  /* mobil: Hintergrundbilder ruhiger, damit Text auf kleinen Flächen sicher lesbar bleibt */
+  #ueber,#auftritte,#videos,#repertoire,#mitsingen,.footer{background-attachment:scroll}
+  body::after{opacity:.035}
+}
+
 /* ---------------------------------------------------------------- Sections */
 .section{padding:clamp(70px,10vw,124px) 0}
 .section--sand{background:var(--sand-hell)}
@@ -208,4 +272,49 @@ p{margin:0 0 1.15em;max-width:62ch}
   .hero{height:92svh}
   .facts{grid-template-columns:1fr 1fr}
   .footer__base{flex-direction:column;gap:10px;text-align:center}
+}
+
+/* ---------------------------------------------------------------- Interaktion */
+/* Lesefortschritt */
+.fortschritt{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:var(--ocker);
+  transition:width .12s linear}
+
+/* aktiver Navigationspunkt */
+.nav__links a.aktiv{color:var(--ocker);border-bottom-color:var(--ocker)}
+.nav--solid .nav__links a.aktiv{color:var(--ocker)}
+
+/* Zeitstrahl: sanftes Anheben beim Überfahren */
+.tl{transition:transform .45s cubic-bezier(.2,.7,.3,1)}
+.tl__img{transition:transform .55s cubic-bezier(.2,.7,.3,1),box-shadow .45s ease}
+.tl:hover .tl__img{transform:translateY(-4px) scale(1.02);box-shadow:0 20px 44px -20px rgba(24,26,21,.55)}
+.tl__date{transition:color .35s ease}
+.tl:hover .tl__date{color:var(--ocker)}
+.tl::before{transition:transform .35s ease,background .35s ease}
+.tl:hover::before{transform:scale(1.35)}
+
+/* Kennzahlen */
+.fact strong{font-variant-numeric:lining-nums;transition:color .4s ease}
+.facts:hover .fact strong{color:var(--ocker-hell)}
+.fact:hover strong{color:var(--ocker)}
+
+/* Lightbox für die Videos */
+.lightbox{position:fixed;inset:0;z-index:80;display:none;place-items:center;padding:24px;
+  background:rgba(12,11,9,.82);backdrop-filter:blur(6px);opacity:0;transition:opacity .32s ease}
+.lightbox.offen{display:grid;opacity:1}
+.lightbox__inhalt{max-width:min(1000px,92vw);width:100%}
+.lightbox video{width:100%;max-height:76vh;border-radius:3px;background:#000;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.lightbox__text{color:rgba(255,255,255,.85);font-size:.9rem;margin-top:14px;text-align:center;
+  font-style:italic}
+.lightbox__zu{position:absolute;top:20px;right:24px;width:44px;height:44px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;font-size:1.4rem;
+  line-height:1;cursor:pointer;transition:.25s ease}
+.lightbox__zu:hover{background:rgba(255,255,255,.2);transform:rotate(90deg)}
+.lightbox__zu:focus-visible,.play:focus-visible,.nav__links a:focus-visible,.btn:focus-visible{
+  outline:2px solid var(--ocker);outline-offset:3px}
+body.fixiert{overflow:hidden}
+
+@media (prefers-reduced-motion:reduce){
+  .tl,.tl__img,.lightbox,.lightbox__zu{transition:none}
+  .fortschritt{transition:none}
 }
