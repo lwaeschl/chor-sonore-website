@@ -7,12 +7,13 @@
   --ocker-hell:#C68B45;
   --tinte:#181A15;
   --grau:#5B594E;
-  --grau-hell:#8A887C;
+  --grau-hell:#6B695B;   /* dunkler als zuvor: 4.6:1 auch über den Bild-Washes */
   --max:1120px;
   --serif:"Cormorant Garamond",Georgia,"Iowan Old Style",serif;
   --sans:"Inter",-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif;
 }
 *{box-sizing:border-box}
+:where(section[id],footer[id]){scroll-margin-top:88px}
 html{scroll-behavior:smooth}
 body{
   margin:0;background:var(--papier);color:var(--tinte);
@@ -295,7 +296,6 @@ body::after{
 
 /* Kennzahlen */
 .fact strong{font-variant-numeric:lining-nums;transition:color .4s ease}
-.facts:hover .fact strong{color:var(--ocker-hell)}
 .fact:hover strong{color:var(--ocker)}
 
 /* Lightbox für die Videos */

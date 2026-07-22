@@ -75,7 +75,8 @@ const zahlBeobachter = new IntersectionObserver(eintraege => {
     zahlBeobachter.unobserve(e.target);
     const ziel = e.target.textContent.trim();
     const zahl = parseInt(ziel.replace(/\D/g, ''), 10);
-    if (!zahl || sparsameBewegung || /täglich/i.test(ziel)) return;
+    // Jahreszahlen nicht hochzählen – das liest sich wie ein Countdown
+    if (!zahl || sparsameBewegung || /täglich/i.test(ziel) || /^(19|20)\d\d$/.test(ziel)) return;
     const dauer = 900, start = performance.now();
     const schritt = jetzt => {
       const t = Math.min(1, (jetzt - start) / dauer);
