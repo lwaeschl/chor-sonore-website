@@ -19,7 +19,7 @@ body{
   font-family:var(--sans);font-weight:300;font-size:17px;line-height:1.72;
   -webkit-font-smoothing:antialiased;overflow-x:hidden;
 }
-img,video{max-width:100%;display:block}
+img,video{max-width:100%;height:auto;display:block}
 a{color:inherit}
 
 h1,h2,h3{font-family:var(--serif);font-weight:500;line-height:1.12;margin:0 0 .5em}
